@@ -1,224 +1,428 @@
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Lato:wght@300;400&display=swap');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none">
+  <title>Romantic Dare Card Generator</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap');
 
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  html, body {
-    width: 100%;
-    min-height: 100%;
-    overflow-x: hidden;
-    font-family: 'Lato', sans-serif;
-  }
-
-  body {
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(150deg, #fdf0f5 0%, #f5eeff 55%, #fff5f0 100%);
-  }
-
-  .root {
-    width: 100%;
-    min-height: 100vh;
-    padding: 24px 18px 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(150deg, #fdf0f5 0%, #f5eeff 55%, #fff5f0 100%);
-    font-family: 'Lato', sans-serif;
-  }
-
-  .bg {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    overflow: hidden;
-  }
-
-  .hp {
-    position: absolute;
-    opacity: 0.11;
-    animation: floatUp linear infinite;
-    color: #d4748a;
-    user-select: none;
-  }
-
-  @keyframes floatUp {
-    0%   { transform: translateY(110%) rotate(0deg); opacity: 0; }
-    10%  { opacity: 0.11; }
-    90%  { opacity: 0.07; }
-    100% { transform: translateY(-15%) rotate(18deg); opacity: 0; }
-  }
-
-  .sp {
-    position: absolute;
-    border-radius: 50%;
-    opacity: 0;
-    animation: sparkle ease-in-out infinite;
-  }
-
-  @keyframes sparkle {
-    0%,100% { opacity: 0; transform: scale(0); }
-    50% { opacity: 0.22; transform: scale(1); }
-  }
-
-  .title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.8rem, 7vw, 2.3rem);
-    color: #8b4d6b;
-    text-align: center;
-    margin-bottom: 8px;
-    z-index: 1;
-  }
-
-  .sub {
-    font-size: clamp(0.78rem, 3vw, 0.9rem);
-    color: #b08898;
-    text-transform: uppercase;
-    text-align: center;
-    margin-bottom: 26px;
-    letter-spacing: 1px;
-    z-index: 1;
-  }
-
-  .card-wrap {
-    width: 100%;
-    max-width: 360px;
-    z-index: 1;
-    margin-bottom: 24px;
-  }
-
-  .card {
-    width: 100%;
-    min-height: 230px;
-    border-radius: 22px;
-    background: rgba(255,255,255,0.88);
-    border: 1px solid rgba(212,160,180,0.25);
-    box-shadow: 0 10px 30px rgba(180,100,140,0.12);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 28px 22px;
-    text-align: center;
-    position: relative;
-    backdrop-filter: blur(10px);
-  }
-
-  .card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 22px;
-    background: linear-gradient(
-      135deg,
-      rgba(255,220,230,0.35),
-      rgba(240,210,255,0.16)
-    );
-  }
-
-  .card.out { animation: flipOut 0.32s ease forwards; }
-  .card.in { animation: flipIn 0.32s ease forwards; }
-
-  @keyframes flipOut {
-    from { transform: rotateY(0deg) scale(1); opacity: 1; }
-    to { transform: rotateY(88deg) scale(0.95); opacity: 0; }
-  }
-
-  @keyframes flipIn {
-    from { transform: rotateY(-88deg) scale(0.95); opacity: 0; }
-    to { transform: rotateY(0deg) scale(1); opacity: 1; }
-  }
-
-  .card-icon {
-    position: absolute;
-    top: 14px;
-    left: 16px;
-    font-size: 1rem;
-    opacity: 0.35;
-  }
-
-  .card-num {
-    position: absolute;
-    bottom: 12px;
-    right: 16px;
-    font-size: 0.72rem;
-    color: rgba(170,110,140,0.45);
-  }
-
-  .card-text {
-    position: relative;
-    z-index: 1;
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1rem, 4vw, 1.15rem);
-    color: #7a3f5c;
-    line-height: 1.7;
-    font-style: italic;
-    word-wrap: break-word;
-  }
-
-  .card-text.ph {
-    color: #c4a0b4;
-  }
-
-  .btn {
-    width: 100%;
-    max-width: 260px;
-    padding: 15px 24px;
-    border: none;
-    border-radius: 50px;
-    background: linear-gradient(135deg, #e8789a, #c86fa0);
-    color: white;
-    font-size: 0.95rem;
-    font-weight: 500;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor: pointer;
-    box-shadow: 0 5px 18px rgba(200,100,150,0.25);
-    transition: 0.2s ease;
-    z-index: 1;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .btn:active {
-    transform: scale(0.97);
-  }
-
-  .btn:disabled {
-    opacity: 0.65;
-  }
-
-  .ctr {
-    margin-top: 12px;
-    font-size: 0.8rem;
-    color: #c4a0b4;
-    min-height: 18px;
-    z-index: 1;
-  }
-
-  /* Extra-small phones */
-  @media (max-width: 380px) {
-    .root {
-      padding: 18px 14px 24px;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .card {
-      min-height: 210px;
-      padding: 22px 18px;
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #0b0510;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Core Container: Uses dynamic viewport units to perfectly fit mobile screens without scrolling */
+    .root {
+      width: 100%;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: env(safe-area-inset-top, 24px) 24px env(safe-area-inset-bottom, 32px);
+      position: relative;
+      background: radial-gradient(circle at 50% 0%, #2a1124 0%, #0d0614 70%);
+      overflow: hidden;
+    }
+
+    /* Floating Particles Background */
+    .bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hp {
+      position: absolute;
+      color: #ff6584;
+      opacity: 0;
+      filter: drop-shadow(0 0 4px rgba(255,101,132,0.4));
+      animation: floatUp linear infinite;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(105vh) rotate(0deg) scale(0.8); opacity: 0; }
+      15% { opacity: 0.25; }
+      85% { opacity: 0.25; }
+      100% { transform: translateY(-10vh) rotate(360deg) scale(1.2); opacity: 0; }
+    }
+
+    /* Header Section */
+    .header {
+      text-align: center;
+      margin-top: 16px;
+      z-index: 10;
     }
 
     .title {
-      font-size: 1.6rem;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 7vw, 2.4rem);
+      font-weight: 600;
+      background: linear-gradient(135deg, #fff 30%, #ffb8d1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .sub {
+      font-size: clamp(0.75rem, 3vw, 0.85rem);
+      color: #a392ad;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    /* 3D Card Stage */
+    .card-stage {
+      width: 100%;
+      max-width: 340px;
+      height: 42vh;
+      max-height: 380px;
+      min-height: 280px;
+      perspective: 1200px;
+      z-index: 10;
+      margin: auto 0;
+    }
+
+    .card-anchor {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    /* Flips the entire container when active */
+    .card-stage.flipped .card-anchor {
+      transform: rotateY(180deg);
+    }
+
+    /* Shared Card Face styling (Glassmorphism) */
+    .card-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 28px;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 
+                  inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    }
+
+    /* Front Face (The Card Back Graphic) */
+    .card-front {
+      background: linear-gradient(135deg, #231221 0%, #160a1a 100%);
+      border: 1.5px solid rgba(232, 120, 154, 0.25);
+    }
+
+    .card-front-design {
+      width: 100%;
+      height: 100%;
+      border: 1px dashed rgba(232, 120, 154, 0.15);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-front-logo {
+      font-size: 3rem;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 0 12px rgba(232, 120, 154, 0.4));
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+
+    .card-front-prompt {
+      font-size: 0.85rem;
+      color: #e8789a;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* Back Face (The revealed Dare Content) */
+    .card-back {
+      background: rgba(30, 18, 36, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      transform: rotateY(180deg);
+    }
+
+    .card-icon {
+      position: absolute;
+      top: 20px;
+      left: 22px;
+      font-size: 1.2rem;
+    }
+
+    .card-num {
+      position: absolute;
+      bottom: 18px;
+      right: 22px;
+      font-size: 0.75rem;
+      color: #8f799d;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .card-text {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.05rem, 4.5vw, 1.25rem);
+      color: #f5effa;
+      line-height: 1.65;
+      font-style: italic;
+      text-align: center;
+    }
+
+    /* Interactive / Controls Bottom Section */
+    .controls {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      z-index: 10;
     }
 
     .btn {
-      max-width: 100%;
+      width: 100%;
+      max-width: 280px;
+      height: 56px; /* Optimized tap target size for mobile */
+      background: linear-gradient(135deg, #ff6584, #d43f7a);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(212, 63, 122, 0.35);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      touch-action: manipulation;
     }
+
+    .btn:active {
+      transform: scale(0.96);
+      box-shadow: 0 4px 12px rgba(212, 63, 122, 0.2);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      transform: none;
+    }
+
+    .ctr {
+      font-size: 0.75rem;
+      color: #8f799d;
+      letter-spacing: 0.5px;
+      font-weight: 500;
+      height: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="root">
+  <div class="bg" id="bg"></div>
+
+  <div class="header">
+    <h1 class="title">Take a Dare</h1>
+    <p class="sub">Let fate decide your night</p>
+  </div>
+
+  <div class="card-stage" id="stage" onclick="handleCardTap()">
+    <div class="card-anchor">
+      <div class="card-face card-front">
+        <div class="card-front-design">
+          <div class="card-front-logo">✨</div>
+          <div class="card-front-prompt">Tap to Reveal</div>
+        </div>
+      </div>
+      <div class="card-face card-back">
+        <span class="card-icon" id="card-icon">💌</span>
+        <p class="card-text" id="ct"></p>
+        <span class="card-num" id="card-num">#0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn" id="btn" onclick="draw()">Draw a Card</button>
+    <p class="ctr" id="ctr"></p>
+  </div>
+</div>
+
+<script>
+const dares = [
+  "Kiss the other person 6 times — if they react at all, you get to tease or tickle them.",
+  "Give the other person a hickey anywhere they choose.",
+  "Whisper exactly what you want to do to them… but neither of you can touch for the entire dare.",
+  "Stay completely still for 2 minutes and try not to react — no matter what.",
+  "Slowly graze your fingertips all over their body… stopping right there.",
+  "Remove one piece of clothing of your choice.",
+  "Make out intensely for 3 minutes — if either person makes a sound, the other gets to choose their next move.",
+  "Make out with your hands behind your back — no touching allowed.",
+  "Winner of this round gets full control of the next action within the game.",
+  "Send your partner a voice note saying only their name… in 3 different accents.",
+  "Give your partner a 60-second shoulder massage without saying a word.",
+  "Whisper your favourite thing about their smile directly into their ear.",
+  "Hold eye contact for 30 seconds without laughing.",
+  "Tell your partner the last dream they appeared in.",
+  "Read your partner a love poem — make one up on the spot.",
+  "Let your partner draw something on your wrist with their finger and guess what it is.",
+  "Say three things you find deeply attractive about your partner — no repeats.",
+  "Slow dance together for one full song, no skipping.",
+  "Describe your partner using only food metaphors.",
+  "Give your partner a compliment that would make them blush.",
+  "Tell your partner one secret you've never told anyone else.",
+  "Make your partner laugh without using words.",
+  "Look at your partner and describe what you see like you're writing a novel.",
+  "Kiss for exactly 10 seconds. No more, no less.",
+  "Sit back to back and take turns saying something you appreciate about the other.",
+  "Trace letters on each other's palms and guess the words.",
+  "Tell your partner the exact moment you knew things between you were real.",
+  "Invent a cute nickname for your partner right now — it has to stick for the night.",
+  "Serenade your partner with an improvised song about your last date.",
+  "Describe your perfect day together in under 60 seconds.",
+  "Ask your partner one question you've been too shy to ask.",
+  "Hold your partner's face gently and look at them for 20 seconds in silence.",
+  "Tell your partner what song reminds you of them and why.",
+  "Give your partner a forehead kiss that lasts at least five seconds.",
+  "Tell your partner the last thing that made you proud of them.",
+  "Whisper something you want to do together that you haven't done yet.",
+  "Say 'I love you' in three different languages.",
+  "Let your partner change one thing about your look for the next hour.",
+  "Plan a fantasy trip together — 2 minutes, make it extravagant.",
+  "Tell your partner one thing you hope is still true about you both in ten years.",
+  "Give your partner the slowest, gentlest kiss you're capable of.",
+  "Describe your partner using only shades of colour.",
+  "Ask your partner what they wish more people knew about you.",
+  "Take a photo together right now — make it frame-worthy.",
+  "Pick a moment from your time together and narrate it like a movie scene.",
+  "Find your partner's favourite spot and give it extra attention for 30 seconds.",
+  "Do your best impression of how your partner says your name.",
+  "Recite the last thing you said to each other before falling asleep.",
+  "Tell your partner the first physical thing you ever noticed about them.",
+  "Close your eyes. Let your partner choose the next move."
+];
+
+const icons = ['✨','💫','🌸','💕','🌷','🔮','❤️'];
+let lastIdx = -1;
+let drawnCount = 0;
+let isFlipped = false;
+const usedDares = new Set();
+
+const stage = document.getElementById('stage');
+const btn = document.getElementById('btn');
+const ct = document.getElementById('ct');
+const cardIcon = document.getElementById('card-icon');
+const cardNum = document.getElementById('card-num');
+const ctrText = document.getElementById('ctr');
+
+// Allows user to tap the card deck directly to trigger a flip
+function handleCardTap() {
+  if (!isFlipped && !btn.disabled) {
+    draw();
   }
-</style>
+}
+
+function draw() {
+  btn.disabled = true;
+
+  // Reset logic if all cards have been processed once
+  if (usedDares.size >= dares.length) {
+    usedDares.clear();
+  }
+
+  // Choose a new index that wasn't used recently
+  let idx;
+  do { 
+    idx = Math.floor(Math.random() * dares.length); 
+  } while (idx === lastIdx || (dares.length > 1 && usedDares.has(idx)));
+
+  lastIdx = idx; 
+  usedDares.add(idx); 
+  drawnCount++;
+
+  // Step 1: If card is currently revealing a past dare, flip it to the front face first
+  if (isFlipped) {
+    stage.classList.remove('flipped');
+    setTimeout(() => populateAndFlip(idx), 300);
+  } else {
+    populateAndFlip(idx);
+  }
+}
+
+function populateAndFlip(idx) {
+  // Update data cleanly while hidden behind the flip sequence
+  ct.textContent = dares[idx];
+  cardIcon.textContent = icons[drawnCount % icons.length];
+  cardNum.textContent = '#' + drawnCount;
+  
+  // Step 2: Trigger 3D Reveal Flip
+  stage.classList.add('flipped');
+  isFlipped = true;
+
+  // Update counters
+  ctrText.textContent = `${drawnCount} card${drawnCount === 1 ? '' : 's'} drawn`;
+  btn.textContent = 'Shuffle Again';
+
+  // Release button lock once transition completes safely
+  setTimeout(() => {
+    btn.disabled = false;
+  }, 600);
+}
+
+// Mobile-friendly performance optimization for background particle generation
+(function initAmbientParticles() {
+  const bg = document.getElementById('bg');
+  const symbols = ['♥','❤','💖'];
+  const maxParticles = window.innerWidth < 480 ? 10 : 16; // Fewer nodes on small viewports for performance
+  
+  for (let i = 0; i < maxParticles; i++) {
+    const heart = document.createElement('span');
+    heart.className = 'hp';
+    heart.textContent = symbols[i % symbols.length];
+    
+    const size = 10 + Math.random() * 10;
+    const leftPos = Math.random() * 92;
+    const duration = 12 + Math.random() * 12;
+    const delay = Math.random() * -20; // Negative delay ensures particles start mid-screen on boot
+    
+    heart.style.cssText = `
+      left: ${leftPos}%;
+      font-size: ${size}px;
+      animation-duration: ${duration}s;
+      animation-delay: ${delay}s;
+    `;
+    bg.appendChild(heart);
+  }
+})();
+</script>
+
+</body>
+</html>
